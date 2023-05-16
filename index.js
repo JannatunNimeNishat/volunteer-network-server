@@ -34,7 +34,7 @@ async function run() {
         await client.connect(); //todo remove when deploy to vercel
 
         const eventsCollection = client.db('volunteer-network').collection('events')
-
+        const volunteerCollection = client.db('volunteer-network').collection('volunteers')
         //jwt
         //access token generating
         app.post('/jwt', (req,res)=>{
@@ -44,9 +44,9 @@ async function run() {
         })
 
 
-        // event CRUD 
+        // events CRUD 
 
-        //READ (get) all data
+        //READ (get) all events
         app.get('/events', async (req, res) => {
             const result = await eventsCollection.find({}).toArray()
             res.send(result);
@@ -54,9 +54,21 @@ async function run() {
 
 
 
+        //volunteers CRUD
+        //create
+        app.post('/volunteers', async(req,res)=>{
+            const user = req.body;
+            const result = await volunteerCollection.insertOne(user);
+            res.send(result);
+        })
 
-
-
+        //read
+        app.get('/volunteers', async(req,res)=>{
+            const result = await volunteerCollection.find({}).toArray()
+            res.send(result)
+        })
+        //delete
+        
 
 
 
