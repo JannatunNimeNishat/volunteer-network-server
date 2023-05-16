@@ -13,6 +13,8 @@ app.use(express.json())
 //dotenv
 require('dotenv').config()
 
+//jwt
+let jwt = require('jsonwebtoken');
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.oth2isl.mongodb.net/?retryWrites=true&w=majority`;
@@ -33,6 +35,15 @@ async function run() {
 
         const eventsCollection = client.db('volunteer-network').collection('events')
 
+        //jwt
+        //access token generating
+        app.post('/jwt', (req,res)=>{
+            const user = req.body;
+            const token = jwt.sign(user,process.env.ACCESS_TOKEN_SECRET, {expiresIn: '1h'})
+            res.send({token});
+        })
+
+
         // event CRUD 
 
         //READ (get) all data
@@ -41,7 +52,7 @@ async function run() {
             res.send(result);
         })
 
-        
+
 
 
 
